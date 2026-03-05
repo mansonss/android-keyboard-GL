@@ -16,14 +16,60 @@
 
 package org.futo.inputmethod.latin.utils;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import org.futo.inputmethod.latin.define.JniLibName;
 
+import java.io.File;
+
 public final class JniUtils {
     private static final String TAG = JniUtils.class.getSimpleName();
 
+    public static final String JNI_LIB_NAME_GOOGLE = "jni_latinimegoogle";
+    public static final String JNI_LIB_IMPORT_FILE_NAME = "libjni_latinime.so";
+    public static final String PREF_LIBRARY_CHECKSUM = "pref_gesture_library_checksum";
+
+    public static boolean sHaveGestureLib = false;
+
     static {
+        // 1. Try user-supplied library (extracted from Gboard)
+        @SuppressLint("SdCardPath")
+        String filesDir = "/data/data/org.futo.inputmethod.latin/files";
+        // Best effort to get real path — if this fails we fall back to hardcoded
+        try {
+            Class<?> activityThread = Class.forName("android.app.ActivityThread");
+            android.app.Application app = (android.app.Application)
+                    activityThread.getMethod("currentApplication").invoke(null, (Object[]) null);
+            if (app != null && app.getFilesDir() != null) {
+                filesDir = app.getFilesDir().getAbsolutePath();
+            }
+        } catch (Exception ignored) { }
+
+        File userLib = new File(filesDir + File.separator + JNI_LIB_IMPORT_FILE_NAME);
+        if (userLib.isFile()) {
+            try {
+                System.load(userLib.getAbsolutePath());
+                sHaveGestureLib = true;
+                Log.i(TAG, "Loaded user-supplied gesture library");
+            } catch (Throwable t) {
+                Log.w(TAG, "Failed to load user-supplied gesture library", t);
+            }
+        }
+
+        // 2. Try system Google gesture library (works if this is a system app or
+        //    the device ships libjni_latinimegoogle.so)
+        if (!sHaveGestureLib) {
+            try {
+                System.loadLibrary(JNI_LIB_NAME_GOOGLE);
+                sHaveGestureLib = true;
+                Log.i(TAG, "Loaded system Google gesture library");
+            } catch (UnsatisfiedLinkError ul) {
+                Log.w(TAG, "Could not load system gesture library: " + ul.getMessage());
+            }
+        }
+
+        // 3. Fall back to FUTO's built-in swipe library (always present)
         try {
             System.loadLibrary(JniLibName.JNI_LIB_NAME);
         } catch (UnsatisfiedLinkError ule) {

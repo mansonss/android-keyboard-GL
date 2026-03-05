@@ -16,6 +16,7 @@
 
 package org.futo.inputmethod.latin.settings;
 
+import org.futo.inputmethod.latin.utils.JniUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -216,7 +217,7 @@ public class SettingsValues {
         mAutoCorrectionThreshold = readAutoCorrectionThreshold(res,
                 autoCorrectionThresholdRawValue);
         mPlausibilityThreshold = Settings.readPlausibilityThreshold(res);
-        mGestureInputEnabled = Settings.readGestureInputEnabled(prefs, res);
+        mGestureInputEnabled = JniUtils.sHaveGestureLib && Settings.readGestureInputEnabled(prefs, res);
         mGestureTrailEnabled = prefs.getBoolean(Settings.PREF_GESTURE_PREVIEW_TRAIL, true);
         mCloudSyncEnabled = prefs.getBoolean(LocalSettingsConstants.PREF_ENABLE_CLOUD_SYNC, false);
         mAccount = prefs.getString(LocalSettingsConstants.PREF_ACCOUNT_NAME,

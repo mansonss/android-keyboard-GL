@@ -1,5 +1,6 @@
 package org.futo.inputmethod.latin.uix.settings.pages
 
+import org.futo.inputmethod.latin.uix.settings.LoadGestureLibSetting
 import android.content.Context
 import android.media.AudioManager
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -794,6 +795,11 @@ val KeyboardSettingsMenu = UserSettingsMenu(
             key = Settings.PREF_ENABLE_ALT_PERIOD_KEY,
             default = {false},
         ),
+        UserSetting(name = R.string.typing_settings_swipe) {
+            LoadGestureLibSetting()
+        },
+
+
     )
 )
 

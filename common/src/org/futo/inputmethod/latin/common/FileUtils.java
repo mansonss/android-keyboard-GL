@@ -58,4 +58,28 @@ public class FileUtils {
         toFile.delete();
         return fromFile.renameTo(toFile);
     }
+public static void copyContentUriToNewFile(final android.net.Uri uri,
+            final android.content.Context context, final File outfile) throws java.io.IOException {
+        java.io.InputStream in = context.getContentResolver().openInputStream(uri);
+        if (in == null) throw new java.io.IOException("Could not open URI: " + uri);
+        copyStreamToNewFile(in, outfile);
+    }
+
+    public static void copyStreamToNewFile(final java.io.InputStream in,
+            final File outfile) throws java.io.IOException {
+        try (java.io.FileOutputStream out = new java.io.FileOutputStream(outfile)) {
+            copyStreamToOtherStream(in, out);
+        } finally {
+            in.close();
+        }
+    }
+
+    public static void copyStreamToOtherStream(final java.io.InputStream in,
+            final java.io.OutputStream out) throws java.io.IOException {
+        final byte[] buffer = new byte[8192];
+        int read;
+        while ((read = in.read(buffer)) != -1) {
+            out.write(buffer, 0, read);
+        }
+    }
 }

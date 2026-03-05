@@ -136,6 +136,7 @@ set(LATIN_IME_CORE_SRC_FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/core/session/dic_traverse_session.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/core/result/suggestion_results.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/core/result/suggestions_output_utils.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/policyimpl/gesture/gesture_suggest_policy_factory.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/policyimpl/gesture/swipe_scoring.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/policyimpl/gesture/swipe_suggest_policy.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/suggest/policyimpl/gesture/swipe_traversal.cpp

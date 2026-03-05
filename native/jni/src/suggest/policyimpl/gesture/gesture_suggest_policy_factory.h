@@ -26,12 +26,23 @@ class SuggestPolicy;
 
 class GestureSuggestPolicyFactory {
  public:
+    // Called by the Google gesture library's JNI_OnLoad to register itself.
+    // If never called, falls back to FUTO's built-in SwipeSuggestPolicy.
+    static void setGestureSuggestPolicyFactoryMethod(const SuggestPolicy *(*factoryMethod)()) {
+        sGestureSuggestFactoryMethod = factoryMethod;
+    }
+
     static const SuggestPolicy *getGestureSuggestPolicy() {
+        if (sGestureSuggestFactoryMethod) {
+            return sGestureSuggestFactoryMethod();
+        }
+        // Fall back to FUTO's own swipe implementation
         return SwipeSuggestPolicy::getInstance();
     }
 
  private:
     DISALLOW_COPY_AND_ASSIGN(GestureSuggestPolicyFactory);
+    static const SuggestPolicy *(*sGestureSuggestFactoryMethod)();
 };
 } // namespace latinime
 #endif // LATINIME_GESTURE_SUGGEST_POLICY_FACTORY_H
