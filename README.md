@@ -1,3 +1,4 @@
+Added support for loading external gesture typing libraries. (i.e. libjni_latinimegoogle.so)
 # FUTO Keyboard
 
 The goal is to make a good modern keyboard that stays offline and doesn't spy on you. This keyboard is a fork of [LatinIME, The Android Open-Source Keyboard](https://android.googlesource.com/platform/packages/inputmethods/LatinIME), with significant changes made to it.
